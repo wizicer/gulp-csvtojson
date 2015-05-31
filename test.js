@@ -10,39 +10,39 @@ var input = "fieldA.title, fieldA.children[0].name, fieldA.children[0].id,fieldA
 var expected = '[{"fieldA":{"title":"Food Factory","children":[{"name":"Oscar","id":"0023"},{"name":"Tikka","employee":[{"name":"Tim"},{"name":"Joe"}]}],"address":["3 Lame Road","Grantstown"]},"description":"A fresh new food factory"},{"fieldA":{"title":"Kindom Garden","children":[{"name":"Ceil","id":54},{"name":"Pillow","employee":[{"name":"Amst"},{"name":"Tom"}]}],"address":["24 Shaker Street","HelloTown"]},"description":"Awesome castle"}]';
 
 it('should return json when no options', function (cb) {
-	var stream = csvtojson();
+    var stream = csvtojson();
 
-	stream.on('data', function (file) {
-		assert.strictEqual(file.contents.toString(), expected);
-		assert.strictEqual(file.extname, '.json');
-	});
+    stream.on('data', function (file) {
+        assert.strictEqual(file.contents.toString(), expected);
+        assert.strictEqual(file.path.slice(file.path.indexOf('.')), '.json');
+    });
 
-	stream.on('end', cb);
+    stream.on('end', cb);
 
-	stream.write(new gutil.File({
-		base: __dirname,
-		path: __dirname + '/file.csv',
-		contents: new Buffer(input)
-	}));
+    stream.write(new gutil.File({
+        base: __dirname,
+        path: __dirname + '/file.csv',
+        contents: new Buffer(input)
+    }));
 
-	stream.end();
+    stream.end();
 });
 
 it('should return js when globalvariable is set', function (cb) {
-	var stream = csvtojson({ globalvariable: 'gv' });
+    var stream = csvtojson({ globalvariable: 'gv' });
 
-	stream.on('data', function (file) {
-		assert.strictEqual(file.contents.toString(), "gv=" + expected + ";");
-		assert.strictEqual(file.extname, '.js');
-	});
+    stream.on('data', function (file) {
+        assert.strictEqual(file.contents.toString(), "gv=" + expected + ";");
+        assert.strictEqual(file.path.slice(file.path.indexOf('.')), '.js');
+    });
 
-	stream.on('end', cb);
+    stream.on('end', cb);
 
-	stream.write(new gutil.File({
-		base: __dirname,
-		path: __dirname + '/file.csv',
-		contents: new Buffer(input)
-	}));
+    stream.write(new gutil.File({
+        base: __dirname,
+        path: __dirname + '/file.csv',
+        contents: new Buffer(input)
+    }));
 
-	stream.end();
+    stream.end();
 });

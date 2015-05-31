@@ -1,6 +1,6 @@
 {
   "name": "gulp-csvtojson",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "convert csv to json",
   "license": "MIT",
   "repository": "wizicer/gulp-csvtojson",
@@ -13,7 +13,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "nodemon --exec npm test"
   },
   "files": [
     "index.js"
