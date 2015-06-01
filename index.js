@@ -2,11 +2,12 @@
 var gutil = require('gulp-util');
 var through = require('through2');
 var Converter=require("csvtojson").core.Converter;
+var path = require('path');
 
 
 module.exports = function (options) {
     if (typeof(options) === "undefined") {
-        options = {};
+        options = { genjs: false };
     }
     // if (!options.foo) {
     //     throw new gutil.PluginError('gulp-csvtojson', '`foo` required');
@@ -30,10 +31,14 @@ module.exports = function (options) {
             
             csvConverter.fromString(file.contents.toString(), function(err, jsonObj) {
                 var output = JSON.stringify(jsonObj);
+                var variablename = path.basename(file.path, path.extname(file.path));
                 file.path = file.path.slice(0, file.path.indexOf('.')) + ".json"
-                if (typeof(options.globalvariable) !== "undefined") {
+                if (typeof(options.globalvariable) !== "undefined" && options.globalvariable !== null) {
+                    variablename = options.globalvariable;
+                }
+                if (options.genjs) {
                     file.path = file.path.slice(0, file.path.indexOf('.')) + ".js"
-                    output = options.globalvariable + "=" + output + ";";
+                    output = variablename + "=" + output + ";";
                 }
                 file.contents = new Buffer(output);
                 gulpobj.push(file);

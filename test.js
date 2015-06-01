@@ -28,8 +28,46 @@ it('should return json when no options', function (cb) {
     stream.end();
 });
 
-it('should return js when globalvariable is set', function (cb) {
+it('should return js when globalvariable is set null', function (cb) {
+    var stream = csvtojson({ globalvariable: null, genjs: true });
+
+    stream.on('data', function (file) {
+        assert.strictEqual(file.contents.toString(), "file=" + expected + ";");
+        assert.strictEqual(file.path.slice(file.path.indexOf('.')), '.js');
+    });
+
+    stream.on('end', cb);
+
+    stream.write(new gutil.File({
+        base: __dirname,
+        path: __dirname + '/file.csv',
+        contents: new Buffer(input)
+    }));
+
+    stream.end();
+});
+
+it('should return json when globalvariable is set without set genjs', function (cb) {
     var stream = csvtojson({ globalvariable: 'gv' });
+
+    stream.on('data', function (file) {
+        assert.strictEqual(file.contents.toString(), expected);
+        assert.strictEqual(file.path.slice(file.path.indexOf('.')), '.json');
+    });
+
+    stream.on('end', cb);
+
+    stream.write(new gutil.File({
+        base: __dirname,
+        path: __dirname + '/file.csv',
+        contents: new Buffer(input)
+    }));
+
+    stream.end();
+});
+
+it('should return js when globalvariable is set', function (cb) {
+    var stream = csvtojson({ globalvariable: 'gv', genjs: true });
 
     stream.on('data', function (file) {
         assert.strictEqual(file.contents.toString(), "gv=" + expected + ";");

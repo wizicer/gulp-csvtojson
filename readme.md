@@ -17,9 +17,9 @@ var gulp = require('gulp');
 var csvtojson = require('gulp-csvtojson');
 
 gulp.task('default', function () {
-	return gulp.src('src/file.csv')
-		.pipe(csvtojson({globalvariable: 'gv'}))
-		.pipe(gulp.dest('dist'));
+    return gulp.src('src/file.csv')
+        .pipe(csvtojson({globalvariable: 'gv'}))
+        .pipe(gulp.dest('dist'));
 });
 ```
 
@@ -30,12 +30,20 @@ gulp.task('default', function () {
 
 #### options
 
+##### genjs
+
+Type: `bool`  
+Default: `false`
+
+When set true, output `.js` file with global variable assignment.
+
 ##### globalvariable
 
 Type: `string`  
 Default: `null`
 
-The name which global variable will be assigned the json object.
+The name which global variable will be assigned the json object.  
+Only available when `genjs` is set to `true`.
 
 ## License
 
