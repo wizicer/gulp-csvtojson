@@ -18,7 +18,7 @@ var csvtojson = require('gulp-csvtojson');
 
 gulp.task('default', function () {
     return gulp.src('src/file.csv')
-        .pipe(csvtojson({globalvariable: 'gv'}))
+        .pipe(csvtojson({genjs: true}))
         .pipe(gulp.dest('dist'));
 });
 ```
