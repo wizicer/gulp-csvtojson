@@ -1,11 +1,10 @@
 'use strict';
+var File = require('vinyl');
 var assert = require('assert');
 var gutil = require('gulp-util');
-var csvtojson = require('./');
 var gulpCsvtojson = require('./');
-var File = require('vinyl');
-var Readable = require('stream').Readable;
 var concat = require('concat-stream');
+var Readable = require('stream').Readable;
 
 var input = "fieldA.title, fieldA.children[0].name, fieldA.children[0].id,fieldA.children[1].name, fieldA.children[1].employee[].name,fieldA.children[1].employee[].name, fieldA.address[],fieldA.address[], description\n" +
             "Food Factory, Oscar, 0023, Tikka, Tim, Joe, 3 Lame Road, Grantstown, A fresh new food factory\n" +
@@ -19,7 +18,7 @@ var stringToStream = function(string){
     rs.push(null);
     
     return rs;
-}
+};
 
 describe("Given we are using gulp-csvtojson",function(){
     describe("Given csv data",function(){
@@ -48,9 +47,8 @@ describe("Given we are using gulp-csvtojson",function(){
 
                 it("should generate expected json string",function(done){
                     var expectedResult = JSON.stringify([{"Header1":"col1-row1","Header2":"col2-row1","Header3":"col3-row1"},{"Header1":"col1-row2","Header2":"col2-row2","Header3":"col3-row2"}]);
-                    
                     csvtojsonStream.once('data',function(file){
-                        assert(file.contents.toString() == expectedResult);
+                        assert.equal(file.contents.toString(), expectedResult);
                         done();
                     });
                     csvtojsonStream.write(file);
@@ -59,7 +57,7 @@ describe("Given we are using gulp-csvtojson",function(){
 
                 it('should return json when no options', function (done) {
                     csvtojsonStream.once('data',function(file){
-                        assert(file.contents.toString() == expected);
+                        assert.equal(file.contents.toString(), expected);
                         done();
                     });
 
@@ -85,7 +83,7 @@ describe("Given we are using gulp-csvtojson",function(){
 
                 it("should return js when globalvariable is set null",function(done){                    
                     csvtojsonStream.once('data',function(file){
-                        assert(file.contents.toString(), "file=" + expected + ";");
+                        assert.equal(file.contents.toString(), "file=" + expected + ";");
                         done();
                     });
 
@@ -102,7 +100,7 @@ describe("Given we are using gulp-csvtojson",function(){
 
                 it("should return js when globalvariable is set null",function(done){                    
                     csvtojsonStream.once('data',function(file){
-                        assert(file.contents.toString(),  expected );
+                        assert.equal(file.contents.toString(),  expected );
                         done();
                     });
 
@@ -119,7 +117,7 @@ describe("Given we are using gulp-csvtojson",function(){
 
                 it("should return js when globalvariable is set null",function(done){                    
                     csvtojsonStream.once('data',function(file){
-                        assert(file.contents.toString(),  "gv=" + expected + ";" );
+                        assert.equal(file.contents.toString(),  "gv=" + expected + ";" );
                         done();
                     });
 
@@ -148,7 +146,7 @@ describe("Given we are using gulp-csvtojson",function(){
                     var expectedResult = [{"Header1":"col1-row1","Header2":"col2-row1","Header3":"col3-row1"},{"Header1":"col1-row2","Header2":"col2-row2","Header3":"col3-row2"}];
                     csvtojsonStream.on('data',function(file){
                         file.contents.pipe(concat(function(data){
-                            assert(JSON.stringify(JSON.parse(data.toString())) == JSON.stringify(expectedResult));
+                            assert.equal(JSON.stringify(JSON.parse(data.toString())), JSON.stringify(expectedResult));
                             done();
                         }));
                     });
@@ -177,7 +175,7 @@ describe("Given we are using gulp-csvtojson",function(){
                     var expectedResult = 'var any = [{"Header1":"col1-row1","Header2":"col2-row1","Header3":"col3-row1"},{"Header1":"col1-row2","Header2":"col2-row2","Header3":"col3-row2"}];';
                     csvtojsonStream.on('data',function(file){
                         file.contents.pipe(concat(function(data){
-                            assert(data.toString().replace(/\s\n/g,'') == expectedResult);
+                            assert.equal(data.toString().replace(/\s?\n/g,''), expectedResult);
                             done();
                         }));
                     });
