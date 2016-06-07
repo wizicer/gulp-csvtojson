@@ -5,18 +5,20 @@ var through = require('through2');
 var Converter=require("csvtojson").Converter;
 
 var getVariableName = function(file,options){
-    if (typeof(options.globalvariable) !== "undefined" && options.globalvariable !== null)
+    if (typeof(options.globalvariable) !== "undefined" && options.globalvariable !== null){
         return options.globalvariable;
+    }
 
-    return path.basename(file.path, path.extname(file.path))
+    return path.basename(file.path, path.extname(file.path));
 };
 
 var onComplete = function(stream,file,options,done){
     if (options.genjs){
         file.path = gutil.replaceExtension(file.path,'.js');
     }
-    else
+    else{
         file.path = gutil.replaceExtension(file.path,'.json');
+    }
 
     stream.push(file);
     return done();
@@ -38,6 +40,37 @@ var generateJsStream = function(variablename){
     });
 };
 
+var processStream = function(file,options,cb){
+    options.toArrayString=true;
+    options.constructResult=false;
+    var csvConverter = new Converter(options);
+
+    file.contents = file.contents.pipe(csvConverter);
+    if (options.genjs) {
+        var variablename = getVariableName(file,options);
+        file.contents = file.contents.pipe(generateJsStream(variablename));
+    }
+    cb();
+};
+
+var processBuffer = function(file,options,cb){
+    var csvConverter = new Converter(options);
+                
+    csvConverter.fromString(file.contents.toString(), function(err, jsonObj) {
+        if(err){
+            return cb(err);
+        }
+
+        var output = JSON.stringify(jsonObj);
+        if (options.genjs) {
+            var variablename = getVariableName(file,options);
+            output = "var "+variablename + " = " + output + ";";
+        }
+        file.contents = new Buffer(output);
+        cb();
+    });
+};
+
 module.exports = function (options) {
     if (typeof(options) === "undefined") {
         options = { genjs: false };
@@ -47,42 +80,23 @@ module.exports = function (options) {
         var self = this;
 
         if (file.isNull()) {
-            cb(null, file);
-            return;
+            return cb(null, file);
         }
         
         try {
-            if (file.isStream()) {
-                options.constructResult=false;
-                options.toArrayString=true;
-                var csvConverter = new Converter(options);
+            var done = function(err){
+                if(err){ throw err; }
+                onComplete(self,file,options,cb);
+            };
 
-                file.contents = file.contents.pipe(csvConverter);
-                if (options.genjs) {
-                    var variablename = getVariableName(file,options)
-                    file.contents = file.contents.pipe(generateJsStream(variablename));
-                }
-                return onComplete(self,file,options,cb);
+            if (file.isStream()) {
+                return processStream(file,options,done);
             }
 
             if(file.isBuffer()){
-                var csvConverter = new Converter(options);
-                            
-                csvConverter.fromString(file.contents.toString(), function(err, jsonObj) {
-                    if(err){
-                        this.emit('error', new gutil.PluginError('gulp-csvtojson', err));
-                        cb(new gutil.PluginError('gulp-csvtojson', err));
-                    }
-
-                    var output = JSON.stringify(jsonObj);
-                    if (options.genjs) {
-                        var variablename = getVariableName(file,options)
-                        output = "var "+variablename + " = " + output + ";";
-                    }
-                    file.contents = new Buffer(output);
-                    onComplete(self,file,options,cb);
-                });
+                return processBuffer(file,options,done);
             }
+
         } catch (err) {
             this.emit('error', new gutil.PluginError('gulp-csvtojson', err));
             cb(new gutil.PluginError('gulp-csvtojson', err));
