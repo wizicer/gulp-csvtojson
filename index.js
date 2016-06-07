@@ -77,7 +77,7 @@ module.exports = function (options) {
                     var output = JSON.stringify(jsonObj);
                     if (options.genjs) {
                         var variablename = getVariableName(file,options)
-                        output = variablename + "=" + output + ";";
+                        output = "var "+variablename + " = " + output + ";";
                     }
                     file.contents = new Buffer(output);
                     onComplete(self,file,options,cb);
