@@ -25,11 +25,13 @@
     "csv"
   ],
   "dependencies": {
-    "csvtojson": "^0.3.21",
-    "gulp-util": "^3.0.4",
-    "through2": "^0.6.5"
+    "csvtojson": "^0.5.14",
+    "gulp-util": "^3.0.7",
+    "through2": "^2.0.1",
+    "vinyl": "^1.1.1"
   },
   "devDependencies": {
+    "concat-stream": "^1.5.1",
     "mocha": "*"
   }
 }
