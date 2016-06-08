@@ -32,7 +32,7 @@ module.exports = function(){
 	                    csvtojsonStream.end();
 	                });
 				});
-	    		describe("When globalvariable is not set",function(){
+	    		describe("When globalvariable is set",function(){
 	    			var csvtojsonStream = null;
 	    			
 			        beforeEach(function(){

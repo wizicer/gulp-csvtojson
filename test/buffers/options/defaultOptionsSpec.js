@@ -17,7 +17,7 @@ module.exports = function(){
 		            csvtojsonStream = gulpCsvtojson();
 		        });
 
-		        it("should generate expected json string "+csvData.name,function(done){
+		        it("should generate expected json string",function(done){
 		            csvtojsonStream.once('data',function(streamedfile){
 		                assert.equal(streamedfile.contents.toString(), JSON.stringify(csvData.expected));
 		                done();
@@ -25,7 +25,7 @@ module.exports = function(){
 		            csvtojsonStream.write(file);
 		            csvtojsonStream.end();
 		        });
-		        it("should rename path to a json file"+csvData.name,function(done){
+		        it("should rename path to a json file",function(done){
 		            csvtojsonStream.on('data',function(streamedfile){
 		                assert.equal(streamedfile.relative,'any.json');
 		                done();
