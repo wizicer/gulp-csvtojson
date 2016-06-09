@@ -28,15 +28,6 @@ module.exports = function(){
 		            csvtojsonStream.write(file);
 		            csvtojsonStream.end();
 		        });
-		        it("should rename path to a json file",function(done){
-		            csvtojsonStream.on('data',function(streamedfile){
-		                assert.equal(streamedfile.relative,'any.json');
-		                done();
-		            });
-
-		            csvtojsonStream.write(file);
-		            csvtojsonStream.end();
-		        });
 	        });
 		});
 

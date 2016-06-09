@@ -12,38 +12,41 @@ $ npm install --save-dev gulp-csvtojson
 
 ## Usage
 
+Here is the code snippet for general usage which generate json for you.
+
 ```js
 var gulp = require('gulp');
 var csvtojson = require('gulp-csvtojson');
 
 gulp.task('default', function () {
     return gulp.src('src/file.csv')
-        .pipe(csvtojson({genjs: true}))
+        .pipe(csvtojson())
         .pipe(gulp.dest('dist'));
 });
 ```
 
+Here is the code snippet for generating js file.
+
+```js
+var gulp = require('gulp');
+var csvtojson = require('gulp-csvtojson');
+var insert = require('gulp-insert');
+var ext_replace = require('gulp-ext-replace');
+
+gulp.task('default', function () {
+    return gulp.src('src/file.csv')
+        .pipe(csvtojson())
+        .pipe(insert.prepend('var anyVariable = '))
+        .pipe(insert.append(';'))
+        .pipe(ext_replace('.js'))
+        .pipe(gulp.dest('dist'));
+});
+```
 
 ## API
 
-### csvtojson(options)
-
-#### options
-
-##### genjs
-
-Type: `bool`  
-Default: `false`
-
-When set true, output `.js` file with global variable assignment.
-
-##### globalvariable
-
-Type: `string`  
-Default: `null`
-
-The name which global variable will be assigned the json object.  
-Only available when `genjs` is set to `true`.
+Since v0.2.0, API no longer supported, to achieve the same result, please adapt your code according
+to the second code snippet.
 
 ## License
 
