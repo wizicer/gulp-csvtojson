@@ -42,6 +42,7 @@ module.exports = function (options) {
         try {
             var done = function(err){
                 if(err){ throw err; }
+                file.path = gutil.replaceExtension(file.path,'.json');
                 self.push(file);
                 return cb();
             };
