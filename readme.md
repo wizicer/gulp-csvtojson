@@ -20,7 +20,7 @@ var csvtojson = require('gulp-csvtojson');
 
 gulp.task('default', function () {
     return gulp.src('src/file.csv')
-        .pipe(csvtojson())
+        .pipe(csvtojson({ toArrayString: true }))
         .pipe(gulp.dest('dist'));
 });
 ```
@@ -35,13 +35,19 @@ var ext_replace = require('gulp-ext-replace');
 
 gulp.task('default', function () {
     return gulp.src('src/file.csv')
-        .pipe(csvtojson())
+        .pipe(csvtojson({ toArrayString: true }))
         .pipe(insert.prepend('var anyVariable = '))
         .pipe(insert.append(';'))
         .pipe(ext_replace('.js'))
         .pipe(gulp.dest('dist'));
 });
 ```
+
+## Options
+
+Refer to [this list](https://github.com/Keyang/node-csvtojson#params) for full options.
+
+**Note**: to get a valid json file, you need set `toArrayString` to `true`.
 
 ## API
 

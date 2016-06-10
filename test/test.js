@@ -15,7 +15,7 @@ describe("Given we are using gulp-csvtojson", function() {
 
                         beforeEach(function() {
                             file = fileData.getFile(csvData.csv);
-                            csvtojsonStream = gulpCsvtojson();
+                            csvtojsonStream = gulpCsvtojson({ toArrayString: true });
                         });
 
                         it("should generate expected json string", function(done) {

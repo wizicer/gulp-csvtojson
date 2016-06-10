@@ -5,8 +5,6 @@ var through = require('through2');
 var Converter = require("csvtojson").Converter;
 
 var processStream = function(file,options,cb){
-    options.toArrayString=true;
-    options.constructResult=false;
     var csvConverter = new Converter(options);
 
     file.contents = file.contents.pipe(csvConverter);
