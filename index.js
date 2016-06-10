@@ -4,18 +4,18 @@ var gutil = require('gulp-util');
 var through = require('through2');
 var Converter = require("csvtojson").Converter;
 
-var processStream = function(file,options,cb){
+var processStream = function(file,options,cb) {
     var csvConverter = new Converter(options);
 
     file.contents = file.contents.pipe(csvConverter);
     cb();
 };
 
-var processBuffer = function(file,options,cb){
+var processBuffer = function(file,options,cb) {
     var csvConverter = new Converter(options);
                 
     csvConverter.fromString(file.contents.toString(), function(err, jsonObj) {
-        if(err){
+        if (err) {
             return cb(err);
         }
 
@@ -38,8 +38,8 @@ module.exports = function (options) {
         }
         
         try {
-            var done = function(err){
-                if(err){ throw err; }
+            var done = function(err) {
+                if (err) { throw err; }
                 file.path = gutil.replaceExtension(file.path,'.json');
                 self.push(file);
                 return cb();
@@ -49,7 +49,7 @@ module.exports = function (options) {
                 return processStream(file,options,done);
             }
 
-            if(file.isBuffer()){
+            if (file.isBuffer()) {
                 return processBuffer(file,options,done);
             }
 

@@ -33,13 +33,11 @@ describe("Given we are using gulp-csvtojson", function() {
                                 assert.equal(streamedfile.relative,'any.json');
                                 done();
                             });
-
                             csvtojsonStream.write(file);
                             csvtojsonStream.end();
                         });
                     });
                 });
-
             });
         });
     });
